@@ -167,10 +167,11 @@ print(f"Current command: {current_command}")
 If you use this code in your research, please cite the us as follows:
 
 ```bibtex
-@misc{ZHOU2024UTTG
-    title={{UTTG: An Universal Teleoperation Trajectory Generator}}, 
-    author={Zhou, Yixuan, and Wang, Hesheng}, 
-    year={2024},
-    url={https://github.com/IRMV-Manipulation-Group/UTTG}
+@misc{ZHOU2025UTTG,
+    author = {Shengjian Fang, Yixuan Zhou, Yu Zheng, Pengyu Jiang, Siyuan Liu and Hesheng Wang},
+    title = {UTTG: A Universal Teleoperation Approach via Online Trajectory Generation},
+    year = {2025},
+    eprint = {arXiv:2504.19736},
+    url = {https://arxiv.org/abs/2504.19736},
 }
 ```
