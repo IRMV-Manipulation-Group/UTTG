@@ -22,19 +22,49 @@ interface for easy integration with other Python packages.
 
 ### Binary Packages
 
-The following binary packages are required: `eigen3`, `yaml-cpp`.
+The following binary packages are required: `eigen3`, `yaml-cpp`, `libuv`, `ompl`.
 
 These binary packages can be installed via:
 
 ```shell
-sudo apt-get install libeigen3-dev libyaml-cpp-dev
+sudo apt-get install libeigen3-dev libyaml-cpp-dev libuv1-dev libompl-dev
+```
+
+### Source Packages
+
+The following source code packages are required: piqp, plog.
+
+piqp is a library for quadratic programing.
+
+```shell
+cd ~ && git clone https://github.com/PREDICT-EPFL/piqp.git
+cd piqp
+mkdir build && cd build
+cmake .. -DCMAKE_CXX_FLAGS="-march=native" -DBUILD_TESTS=OFF -DBUILD_BENCHMARKS=OFF
+make -j8
+sudo make install
+cd ~ && rm -rf piqp
+```
+plog is a library for lightweight logging.
+
+```shell
+cd ~ && git clone https://github.com/SergiusTheBest/plog.git
+cd plog && mkdir build
+cd build && cmake ..
+make && sudo make install
+cd ~ && sudo rm -rf ./plog
 ```
 
 ### IRMV Packages
 
 The following custom packages are required: `irmv_core`,`imc`.
 
-These packages need to be obtained from the IRMV Lab.
+The prebuilt Debian packages irmv_core.deb and imc.deb are included in this project. Install them with:
+
+```shell
+sudo dpkg -i irmv_core.deb 
+sudo dpkg -i imc.deb     
+```
 
 ## Build
 
@@ -72,7 +102,7 @@ int main() {
     ArmServoModeInterface armServo;
 
     // Initialize the interface with a configuration path and dummy functions
-    armServo.init("path/to/planner_config.yaml", 
+    armServo.init("path/to/servo.yaml", 
                   []() -> std::vector<double> { return {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; }, 
                   [](const std::vector<double>& cmd) { std::cout << "Sending command: "; for (auto c : cmd) std::cout << c << " "; std::cout << std::endl; });
 
@@ -98,6 +128,52 @@ int main() {
 
     return 0;
 }
+```
+
+You should at least give two config files which is in the same path.
+
+servo.ymal:
+```yaml
+Group: franka_research_3
+Method: 0
+```
+
+planner_franka_research_3.ymal:
+```ymal
+MaxVelocityFactor: 1
+MaxAccelerationFactor: 1
+MaxJerkFactor: 1
+TrajectoryParameters:
+  TrajectoryType: 1
+  TOTP:
+    PathTolerance: 0.1
+    MinAngleChange: 0.001
+  IterativeSpline:
+    ZeroAcc: true
+    EnableJerk: false
+    MinStretch: false
+    MinAngleChange: 0.001
+    Type: 0
+ConfigPlannerName: RRTStar
+CartesianPlannerName: Basic
+ServoType: 1
+TCPOnly: false
+Scale: 1
+Kinematics:
+  Type: 0
+  Group: franka_research_3
+  EndEffector: left_ee
+Validator:
+  Type: 0
+  Group: franka_research_3
+  Names:
+    - fr3_joint1
+    - fr3_joint2
+    - fr3_joint3
+    - fr3_joint4
+    - fr3_joint5
+    - fr3_joint6
+    - fr3_joint7
 ```
 
 One can compile the code via:
@@ -167,7 +243,7 @@ print(f"Current command: {current_command}")
 If you use this code in your research, please cite the us as follows:
 
 ```bibtex
-@misc{ZHOU2025UTTG,
+@article{ZHOU2025UTTG,
     author = {Shengjian Fang, Yixuan Zhou, Yu Zheng, Pengyu Jiang, Siyuan Liu and Hesheng Wang},
     title = {UTTG: A Universal Teleoperation Approach via Online Trajectory Generation},
     year = {2025},
