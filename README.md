@@ -132,13 +132,13 @@ int main() {
 
 You should at least give two config files which is in the same path.
 
-servo.ymal:
+servo.yaml:
 ```yaml
 Group: franka_research_3
 Method: 0
 ```
 
-planner_franka_research_3.ymal:
+planner_franka_research_3.yaml:
 ```ymal
 MaxVelocityFactor: 1
 MaxAccelerationFactor: 1
